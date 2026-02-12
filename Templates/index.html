@@ -5,16 +5,20 @@
 {% block content %}
 <div class="hero-card">
     <h1>Welcome back, {{ current_user.real_name or current_user.username }}</h1>
-    <p>名刺をスキャンして、営業活動を効率化しましょう。</p>
-    
+    <p>名刺をスキャンして、営業活動を効率化しましょう!</p>
+
     {% if limit_info %}
-    <div class="limit-status-container" style="margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
+    <div class="limit-status-container"
+        style="margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem;">
             <span>今月の送信件数</span>
             <span><strong>{{ limit_info.sent }}</strong> / {{ limit_info.limit }} 件</span>
         </div>
-        <div class="progress-bar-bg" style="height: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; overflow: hidden;">
-            <div class="progress-bar-fill" style="height: 100%; width: {{ (limit_info.sent / limit_info.limit * 100) if limit_info.limit > 0 else 0 }}%; background: #43e97b; box-shadow: 0 0 10px rgba(67, 233, 123, 0.5); transition: width 0.5s ease-out;"></div>
+        <div class="progress-bar-bg"
+            style="height: 8px; background: rgba(0,0,0,0.2); border-radius: 4px; overflow: hidden;">
+            <div class="progress-bar-fill"
+                style="height: 100%; width: {{ (limit_info.sent / limit_info.limit * 100) if limit_info.limit > 0 else 0 }}%; background: #43e97b; box-shadow: 0 0 10px rgba(67, 233, 123, 0.5); transition: width 0.5s ease-out;">
+            </div>
         </div>
         {% if limit_info.sent >= limit_info.limit %}
         <p style="color: #ff9a9e; font-size: 0.8rem; margin-top: 8px; font-weight: 600;">⚠️ 送信上限に達しています</p>
@@ -27,26 +31,44 @@
     <!-- Quick Registration -->
     <div class="dashboard-section" style="grid-column: span 1;">
         <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="12" y1="12" x2="12" y2="12"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2" />
+                <line x1="12" y1="12" x2="12" y2="12" />
+            </svg>
             新規名刺登録
         </h2>
-        <label for="fileInput" class="upload-area" style="display: block; border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-xl); text-align: center; cursor: pointer; transition: all 0.2s; background-color: #f8fafc;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); margin-bottom: var(--spacing-md);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <label for="fileInput" class="upload-area"
+            style="display: block; border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-xl); text-align: center; cursor: pointer; transition: all 0.2s; background-color: #f8fafc;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                style="color: var(--text-muted); margin-bottom: var(--spacing-md);">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
             <p style="font-weight: 500; color: var(--text-color);">名刺をアップロード / 撮影</p>
             <input type="file" id="fileInput" name="file" accept="image/*" style="display: none;">
         </label>
-        
+
         <!-- Android specific direct camera button -->
         <div id="androidCameraButtonContainer" style="display: none; margin-top: var(--spacing-md);">
             <label for="cameraInput" class="btn btn-secondary btn-block" style="cursor: pointer;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px;">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                </svg>
                 カメラを起動
-                <input type="file" id="cameraInput" name="camera" accept="image/*" capture="environment" style="display: none;">
+                <input type="file" id="cameraInput" name="camera" accept="image/*" capture="environment"
+                    style="display: none;">
             </label>
         </div>
 
         <div id="preview-container" style="display: none; margin-top: var(--spacing-lg); text-align: center;">
-            <img id="preview" alt="選択された名刺" style="max-width: 100%; max-height: 200px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
+            <img id="preview" alt="選択された名刺"
+                style="max-width: 100%; max-height: 200px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);">
             <div class="mt-2">
                 <button id="uploadBtn" class="btn btn-primary btn-block">
                     解析して追加
@@ -58,7 +80,13 @@
     <!-- Recent Cards -->
     <div class="dashboard-section">
         <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
             最近の名刺
         </h2>
         <ul class="dashboard-list">
@@ -82,7 +110,11 @@
     <!-- Recent Activity (Emails) -->
     <div class="dashboard-section" style="grid-column: span 1;">
         <h2>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+            </svg>
             最近の送信履歴
         </h2>
         <ul class="dashboard-list">
@@ -163,13 +195,13 @@
                 },
                 body: formData
             });
-            
+
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.message || '登録に失敗しました。');
             }
-            
+
             // Success!
             window.location.href = "{{ url_for('cards.card_detail', card_id=0) }}".replace('/0', '/' + data.card_id);
 
