@@ -1,0 +1,33 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:1180
+ * Running on http://172.16.0.4:1180
+Press CTRL+C to quit
+c:\CardApp\app.py:72: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  return User.query.get(int(user_id))
+c:\CardApp\app.py:77: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return {"now": datetime.utcnow()}
+127.0.0.1 - - [12/Feb/2026 08:53:12] "GET /admin/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 08:53:12] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [12/Feb/2026 08:53:15] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 08:53:15] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 08:53:15] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [12/Feb/2026 08:53:35] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 08:55:33] "GET / HTTP/1.0" 302 -
+127.0.0.1 - - [12/Feb/2026 08:55:39] "POST /login HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 08:55:39] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 08:55:39] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [12/Feb/2026 08:55:43] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 08:55:44] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 08:55:44] "GET /static/css/style.css HTTP/1.1" 304 -

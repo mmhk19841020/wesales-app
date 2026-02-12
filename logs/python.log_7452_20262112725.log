@@ -1,0 +1,25 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:7492
+ * Running on http://172.16.0.4:7492
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 11:07:29] "GET /.env HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 11:07:32] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 11:10:48] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 11:11:59] "GET / HTTP/1.1" 302 -
+c:\CardApp\app.py:77: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return {"now": datetime.utcnow()}
+127.0.0.1 - - [11/Feb/2026 11:11:59] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 11:12:58] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 11:13:31] "GET /geoserver/web/ HTTP/1.1" 404 -

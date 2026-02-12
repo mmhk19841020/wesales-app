@@ -1,0 +1,77 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:12552
+ * Running on http://172.16.0.4:12552
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 08:46:04] "GET / HTTP/1.1" 302 -
+c:\CardApp\app.py:77: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return {"now": datetime.utcnow()}
+127.0.0.1 - - [11/Feb/2026 08:46:06] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:46:06] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:46:11] "GET /wiki HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:46:44] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 08:47:13] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:47:19] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:47:56] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 08:49:16] "GET /.git/config HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:49:27] "GET /wiki HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:54:02] "GET /druid/index.html HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:57:16] "GET /login?next=/history HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:20] "POST /login?next=/history HTTP/1.1" 302 -
+c:\CardApp\app.py:72: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  return User.query.get(int(user_id))
+127.0.0.1 - - [11/Feb/2026 08:57:20] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:21] "POST /login?next=/history HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 08:57:21] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:21] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:24] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:57:24] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:57:24] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:57:36] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:36] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:36] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:39] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:39] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:39] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:45] "GET /cards HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:45] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:51] "GET /cards/1 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:57:51] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:51] "GET /static/uploads/cards/1d88df31-5cc9-4a79-877b-d8286bb126a0.JPG HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:57:54] "POST /cards/1/delete HTTP/1.1" 400 -
+127.0.0.1 - - [11/Feb/2026 08:58:02] "GET /cards HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:03] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:05] "GET /cards/27 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:07] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:07] "GET /static/uploads/cards/36fec665-bca1-41bd-b9cc-0d8da83a5b54.JPG HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:08] "POST /cards/27/delete HTTP/1.1" 400 -
+127.0.0.1 - - [11/Feb/2026 08:58:19] "GET /cards/27/edit HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:19] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:30] "POST /cards/27/edit HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 08:58:31] "GET /cards/27 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:31] "GET /static/uploads/cards/36fec665-bca1-41bd-b9cc-0d8da83a5b54.JPG HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:31] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:36] "GET /history HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:36] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:36] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:50] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:58:50] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:58:50] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:59:12] "POST /upload HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:59:12] "GET /cards/29 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:59:12] "GET /static/uploads/cards/9e2bf0b3-61c2-47c8-be33-3e4751419b44.jpeg HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:59:12] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:59:16] "GET /create_email/29 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:59:16] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 08:59:20] "GET /api/generate_initial_email/29 HTTP/1.1" 200 -

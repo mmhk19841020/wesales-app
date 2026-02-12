@@ -1,0 +1,91 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:22599
+ * Running on http://172.16.0.4:22599
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 12:24:34] "GET /.git/index HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 12:32:54] "GET /robots.txt HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 12:32:54] "GET / HTTP/1.1" 302 -
+c:\CardApp\app.py:77: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return {"now": datetime.utcnow()}
+127.0.0.1 - - [11/Feb/2026 12:32:54] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 12:33:06] "GET /static/css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 12:49:03] "POST / HTTP/1.1" 405 -
+127.0.0.1 - - [11/Feb/2026 12:52:56] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 12:52:56] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 12:54:35] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:11:24] "GET / HTTP/1.0" 302 -
+127.0.0.1 - - [11/Feb/2026 13:21:16] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:30:05] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:38:09] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:41:06] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:42:47] "GET /SDK/webLanguage HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 13:43:06] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 13:43:06] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 13:43:07] "POST / HTTP/1.1" 405 -
+127.0.0.1 - - [11/Feb/2026 13:52:11] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:10:02] "POST /hello.world?%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:03] "POST /?%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input HTTP/1.1" 405 -
+127.0.0.1 - - [11/Feb/2026 14:10:03] "GET /vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:04] "GET /vendor/phpunit/phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:04] "GET /vendor/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:05] "GET /vendor/phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:05] "GET /vendor/phpunit/phpunit/LICENSE/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:06] "GET /vendor/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:06] "GET /phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:07] "GET /phpunit/phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:08] "GET /phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:08] "GET /phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:09] "GET /lib/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:11] "GET /lib/phpunit/phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:11] "GET /lib/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:12] "GET /lib/phpunit/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:13] "GET /lib/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:14] "GET /laravel/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:15] "GET /www/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:16] "GET /ws/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:18] "GET /yii/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:19] "GET /zend/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:19] "GET /ws/ec/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:21] "GET /V2/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:22] "GET /tests/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:23] "GET /test/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:24] "GET /testing/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:26] "GET /api/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:27] "GET /demo/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:27] "GET /cms/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:28] "GET /crm/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:29] "GET /admin/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:30] "GET /backup/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:31] "GET /blog/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:32] "GET /workspace/drupal/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:33] "GET /panel/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:35] "GET /public/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:36] "GET /apps/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:37] "GET /app/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:38] "GET /index.php?s=/index/\\think\\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:38] "GET /public/index.php?s=/index/\\think\\app/invokefunction&function=call_user_func_array&vars[0]=md5&vars[1][]=Hello HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:39] "GET /index.php?lang=../../../../../../../../usr/local/lib/php/pearcmd&+config-create+/&/<?echo(md5("hi"));?>+/tmp/index1.php HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:40] "GET /index.php?lang=../../../../../../../../tmp/index1 HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:10:42] "GET /containers/json HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:15:23] "HEAD / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:15:40] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:32:12] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:37:24] "GET /.git/config HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 14:42:17] "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:42:18] "GET /login?next=/?XDEBUG_SESSION_START%3Dphpstorm HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 14:43:34] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:46:48] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 14:46:49] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 14:52:27] "GET /.env HTTP/1.1" 404 -

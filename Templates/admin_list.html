@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}ユーザー管理 - WeSales{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+        <h2>ユーザー管理</h2>
+        <a href="{{ url_for('admin.admin_add_user') }}" class="btn btn-primary">ユーザー追加</a>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--border-color); text-align: left;">
+                    <th style="padding: var(--spacing-sm);">ID</th>
+                    <th style="padding: var(--spacing-sm);">ユーザー名</th>
+                    <th style="padding: var(--spacing-sm);">会社名</th>
+                    <th style="padding: var(--spacing-sm);">氏名</th>
+                    <th style="padding: var(--spacing-sm);">権限</th>
+                    <th style="padding: var(--spacing-sm);">今月の送信数 / 上限</th>
+                    <th style="padding: var(--spacing-sm);">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: var(--spacing-sm);">{{ user.id }}</td>
+                    <td style="padding: var(--spacing-sm);">{{ user.username }}</td>
+                    <td style="padding: var(--spacing-sm);">{{ user.company_name or '-' }}</td>
+                    <td style="padding: var(--spacing-sm);">{{ user.real_name or '-' }}</td>
+                    <td style="padding: var(--spacing-sm);">
+                        {% if user.is_admin %}
+                        <span style="color: var(--primary-color); font-weight: bold;">管理者</span>
+                        {% else %}
+                        一般
+                        {% endif %}
+                    </td>
+                    <td style="padding: var(--spacing-sm);">
+                        {% if not user.is_admin %}
+                        <span style="{{ 'color: var(--danger-color); font-weight: bold;' if user.current_sent >= user.monthly_limit else '' }}">
+                            {{ user.current_sent }} / {{ user.monthly_limit }}
+                        </span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td style="padding: var(--spacing-sm);">
+                        <a href="{{ url_for('admin.admin_edit_user', user_id=user.id) }}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">編集</a>
+                        {% if user.id != current_user.id %}
+                        <form action="{{ url_for('admin.admin_delete_user', user_id=user.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('本当に削除しますか？');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="btn" style="padding: 0.25rem 0.5rem; font-size: 0.875rem; background-color: var(--danger-color); color: white;">削除</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

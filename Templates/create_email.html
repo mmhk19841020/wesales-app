@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}メール作成 - WeSales{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+        メール作成
+        <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-muted); margin-left: 10px;">
+            To: {{ card.company_name }} {{ card.person_name }} 様
+        </span>
+    </h2>
+
+    <!-- Rewrite Section -->
+    <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+        <label style="color: #0369a1; display: flex; align-items: center; gap: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><line x1="16.5" y1="3.5" x2="22" y2="9"/><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 12"/><path d="M21 3v9"/></svg>
+            AIへの調整指示
+        </label>
+        <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+            <input type="text" id="toneInstruction" placeholder="例：もっと柔らかく、短めに、情熱的に..." style="flex: 1;">
+            <button id="rewriteBtn" class="btn btn-secondary" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                再生成
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="targetEmail">宛先メールアドレス</label>
+        <input type="email" id="targetEmail" value="{{ card.email or '' }}">
+    </div>
+    
+    <div class="form-group">
+        <label for="mailSubject">件名</label>
+        <input type="text" id="mailSubject" placeholder="AIが件名を生成します...">
+    </div>
+    
+    <div class="form-group">
+        <label for="mailBody">メール本文</label>
+        <textarea id="mailBody" rows="15" style="font-family: inherit; line-height: 1.6;" placeholder="AIが本文を生成します..."></textarea>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">※ 内容を自由に編集できます</p>
+    </div>
+    
+    <button id="sendBtn" class="btn btn-primary btn-block" style="font-size: 1.1rem; padding: 1rem;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        メール送信
+    </button>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <h3 style="color: var(--primary-color);">AIが作成中...</h3>
+    <p>名刺情報に合わせて最適なメールを生成しています</p>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const targetEmail = document.getElementById('targetEmail');
+    const mailSubject = document.getElementById('mailSubject');
+    const mailBody = document.getElementById('mailBody');
+    const sendBtn = document.getElementById('sendBtn');
+    const loadingDiv = document.getElementById('loading');
+    
+    // Card info for rewrite
+    const cardInfo = {
+        id: "{{ card.id }}",
+        name: "{{ card.person_name }}",
+        company: "{{ card.company_name }}",
+        title: "{{ card.job_title }}"
+    };
+
+    // Initial draft generation
+    async function generateInitialDraft() {
+        loadingDiv.style.display = 'flex';
+        try {
+            const response = await fetch(`/api/generate_initial_email/${cardInfo.id}`);
+            const data = await response.json();
+            if (data.subject && data.body) {
+                mailSubject.value = data.subject;
+                mailBody.value = data.body;
+            } else if (data.error) {
+                alert("生成エラー: " + data.error);
+            }
+        } catch (error) {
+            console.error("Initial generation failed:", error);
+            alert("初期生成に失敗しました。");
+        } finally {
+            loadingDiv.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', generateInitialDraft);
+
+    // Send Email
+    sendBtn.onclick = async () => {
+        if (!targetEmail.value) { 
+            alert("宛先メールアドレスを入力してください。"); 
+            return; 
+        }
+        if (!confirm(targetEmail.value + " 宛に送信しますか？")) return;
+
+        const originalText = sendBtn.innerHTML;
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = "送信中...";
+
+        const payload = {
+            to: targetEmail.value,
+            subject: mailSubject.value,
+            body: mailBody.value,
+            customer_name: cardInfo.name, 
+            company_name: cardInfo.company
+        };
+
+        try {
+            const res = await fetch('/send', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await res.json();
+            alert(result.message);
+            window.location.href = "{{ url_for('history.show_history') }}";
+
+        } catch (error) {
+            console.error("Fetch Error:", error);
+            alert("通信エラーが発生しました。");
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = originalText;
+        }
+    };
+
+    // Rewrite with AI
+    const rewriteBtn = document.getElementById('rewriteBtn');
+    const toneInstruction = document.getElementById('toneInstruction');
+    
+    rewriteBtn.onclick = async () => {
+        if (!toneInstruction.value) return;
+
+        loadingDiv.style.display = 'flex';
+        rewriteBtn.disabled = true;
+
+        try {
+            const response = await fetch('/rewrite', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    instruction: toneInstruction.value,
+                    current_body: mailBody.value,
+                    customer_info: cardInfo
+                })
+            });
+
+            const data = await response.json();
+            if (data.subject && data.body) {
+                mailSubject.value = data.subject;
+                mailBody.value = data.body;
+                toneInstruction.value = "";
+            } else if (data.mail_text) { // Fallback for old style if needed
+                mailBody.value = data.mail_text;
+                toneInstruction.value = "";
+            }
+        } catch (error) {
+            alert("再生成に失敗しました。");
+        } finally {
+            rewriteBtn.disabled = false;
+            loadingDiv.style.display = 'none';
+        }
+    };
+</script>
+{% endblock %}

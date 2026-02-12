@@ -1,0 +1,17 @@
+flask
+flask-sqlalchemy
+flask-login
+flask-bcrypt
+azure-ai-vision-imageanalysis
+azure-core
+openai
+requests
+beautifulsoup4
+debugpy
+resend
+python-dotenv
+Flask-WTF
+Flask-Talisman
+pytest
+pandas
+openpyxl

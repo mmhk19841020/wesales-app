@@ -1,0 +1,85 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:20616
+ * Running on http://172.16.0.4:20616
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 06:39:59] "GET / HTTP/1.0" 302 -
+127.0.0.1 - - [11/Feb/2026 06:51:13] "GET /bin/ HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 06:51:15] "GET /bin/ HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 06:51:19] "GET /bin/ HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 06:51:22] "GET /bin/ HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 06:51:26] "GET /bin/ HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 06:57:43] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 06:58:23] "GET /.env HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:09:06] "POST / HTTP/1.1" 405 -
+127.0.0.1 - - [11/Feb/2026 07:17:37] "GET /history HTTP/1.1" 302 -
+c:\CardApp\app.py:73: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  
+127.0.0.1 - - [11/Feb/2026 07:17:37] "GET /login?next=/history HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:17:42] "POST /login?next=/history HTTP/1.1" 302 -
+c:\CardApp\app.py:68: LegacyAPIWarning: The Query.get() method is considered legacy as of the 1.x series of SQLAlchemy and becomes a legacy construct in 2.0. The method is now available as Session.get() (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+  login_manager.login_view = "login"
+127.0.0.1 - - [11/Feb/2026 07:17:42] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:17:43] "POST /login?next=/history HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:17:43] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:17:43] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:18:05] "POST /upload HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:06] "GET /cards/28 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:06] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:18:06] "GET /static/uploads/cards/35a698ba-943a-4f90-a855-02be9bd0882c.jpeg HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:09] "GET /create_email/28 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:09] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:18:13] "GET /api/generate_initial_email/28 HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:29] "POST /send HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:30] "GET /history HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:18:30] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:18:30] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:11] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:12] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:12] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:13] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:13] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:13] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:14] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:14] "GET /apple-touch-icon.png HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:15] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:43] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:44] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:44] "GET /static/css/style.css HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:44] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 07:21:47] "POST /login?next=/ HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:47] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:47] "GET /admin/users HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:47] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:21:51] "GET /admin/dashboard HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:51] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:21:53] "GET /cards HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:53] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:21:54] "GET /logout HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:54] "GET /login HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:54] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:21:59] "POST /login HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:21:59] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:21:59] "GET /static/css/style.css HTTP/1.1" 304 -
+127.0.0.1 - - [11/Feb/2026 07:22:19] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:22:19] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:34:23] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:34:23] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 07:47:44] "GET /history HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 07:47:44] "GET /login?next=/history HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:02:15] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 08:04:11] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:04:13] "GET /login?next=/ HTTP/1.1" 200 -
+127.0.0.1 - - [11/Feb/2026 08:04:24] "GET /.git/credentials HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:06:34] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 08:10:17] "GET / HTTP/1.1" 302 -

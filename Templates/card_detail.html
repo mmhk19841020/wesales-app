@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}名刺詳細 - WeSales{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--spacing-lg);">
+        <div>
+            <h2 style="margin-bottom: var(--spacing-xs);">{{ card.company_name or '会社名不明' }}</h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">{{ card.person_name or '氏名不明' }} 様</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm);">
+            <a href="{{ url_for('cards.card_edit', card_id=card.id) }}" class="btn btn-secondary">編集</a>
+            <form action="{{ url_for('cards.card_delete', card_id=card.id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn" style="background-color: var(--danger-color); color: white;">削除</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+        <div style="grid-column: span 2; text-align: center; margin-bottom: var(--spacing-md);">
+            {% if card.image_path and card.image_path != "no-image.png" %}
+            <div style="display: inline-block; position: relative; cursor: zoom-in;" onclick="zoomImage('{{ url_for('static', filename='uploads/cards/' + card.image_path) }}')">
+                <img src="{{ url_for('static', filename='uploads/cards/' + card.image_path) }}" alt="名刺画像" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); transition: transform 0.2s;">
+                <div style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.5); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">
+                    クリックで拡大
+                </div>
+            </div>
+            {% else %}
+            <div style="padding: var(--spacing-xl); background: #f8fafc; border: 2px dashed var(--border-color); border-radius: var(--radius-md); color: var(--text-muted);">
+                画像がありません
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-xl);" class="detail-grid">
+        <div>
+            <h3 style="font-size: 1.25rem; border-bottom: 2px solid var(--border-color); padding-bottom: var(--spacing-sm); margin-bottom: var(--spacing-md);">基本情報</h3>
+            <div style="display: grid; gap: var(--spacing-md);">
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">会社名</strong>
+                    <div>{{ card.company_name or '-' }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">部署名</strong>
+                    <div>{{ card.department_name or '-' }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">役職</strong>
+                    <div>{{ card.job_title or '-' }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">氏名</strong>
+                    <div>{{ card.person_name or '-' }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 style="font-size: 1.25rem; border-bottom: 2px solid var(--border-color); padding-bottom: var(--spacing-sm); margin-bottom: var(--spacing-md);">連絡先</h3>
+            <div style="display: grid; gap: var(--spacing-md);">
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">電話番号</strong>
+                    <div>{{ card.phone_number or '-' }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">Email</strong>
+                    <div>{{ card.email or '-' }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; color: var(--text-muted); font-size: 0.875rem;">URL</strong>
+                    <div>
+                        {% if card.url %}
+                        <a href="{{ card.url }}" target="_blank" rel="noopener noreferrer">{{ card.url }}</a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--border-color); text-align: center;">
+        <a href="{{ url_for('cards.create_email_page', card_id=card.id) }}" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.5rem;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            お礼メールを作成する
+        </a>
+    </div>
+
+    <div style="margin-top: var(--spacing-lg); text-align: center;">
+        <a href="{{ url_for('cards.show_cards') }}" style="color: var(--text-muted);">一覧に戻る</a>
+    </div>
+</div>
+
+<!-- Image Zoom Modal -->
+<dialog id="zoomModal" style="width: 90%; max-width: 900px; padding: 0; border: none; background: transparent; overflow: visible;" onclick="this.close()">
+    <img id="zoomedImg" src="" alt="拡大画像" style="width: 100%; height: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);" onclick="event.stopPropagation()">
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 5px 20px; cursor: pointer;">クリックで閉じる</button>
+    </div>
+</dialog>
+
+<style>
+    #zoomModal::backdrop {
+        background: rgba(0, 0, 0, 0.85);
+    }
+    @media (max-width: 640px) {
+        .detail-grid {
+            grid-template-columns: 1fr !important;
+            gap: var(--spacing-lg) !important;
+        }
+    }
+</style>
+
+<script>
+    const zoomModal = document.getElementById('zoomModal');
+    const zoomedImg = document.getElementById('zoomedImg');
+
+    function zoomImage(src) {
+        zoomedImg.src = src;
+        zoomModal.showModal();
+    }
+</script>
+{% endblock %}

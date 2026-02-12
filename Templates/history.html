@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block title %}送信履歴 - WeSales{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--spacing-md);
+    }
+    
+    .history-table th, .history-table td {
+        padding: var(--spacing-md);
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .history-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+    
+    .history-table tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+    }
+
+    .sortable:hover {
+        background-color: #f1f5f9 !important;
+        color: var(--primary-color) !important;
+    }
+
+    .sort-icon::after {
+        content: "↕";
+        margin-left: 5px;
+        font-size: 0.8rem;
+        color: #cbd5e1;
+    }
+
+    th.asc .sort-icon::after {
+        content: "↑";
+        color: var(--primary-color);
+    }
+
+    th.desc .sort-icon::after {
+        content: "↓";
+        color: var(--primary-color);
+    }
+
+    .search-container {
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+
+    /* Force padding and specific styling for search input */
+    #searchInput.search-input {
+        width: 100% !important;
+        padding: 12px 20px 12px 55px !important;
+        border: 1px solid #dfe1e5 !important;
+        border-radius: 24px !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        transition: box-shadow 0.2s !important;
+        box-shadow: none !important;
+        background-color: white !important;
+        display: block !important;
+    }
+
+    #searchInput.search-input:hover, #searchInput.search-input:focus {
+        outline: none !important;
+        box-shadow: 0 1px 6px rgba(32,33,36,0.28) !important;
+        border-color: rgba(223, 225, 229, 0) !important;
+    }
+
+    .search-icon {
+        position: absolute !important;
+        left: 18px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: #9aa0a6 !important;
+        pointer-events: none !important;
+        z-index: 10 !important;
+    }
+    
+    .date-col { width: 150px; color: var(--text-muted); font-size: 0.9rem; }
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background-color: #dcfce7;
+        color: #166534;
+        border-radius: var(--radius-sm);
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+        .desktop-only { display: none; }
+        .history-table thead { display: none; }
+        .history-table tr {
+            display: block;
+            border-bottom: 2px solid var(--border-color);
+            padding: var(--spacing-sm) 0;
+            margin-bottom: var(--spacing-md);
+        }
+        .history-table td {
+            display: block;
+            border: none;
+            padding: var(--spacing-xs) 0;
+        }
+        .history-table td[data-label="操作"] {
+            order: -1;
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        .history-table td[data-label="操作"]::before { display: none; }
+        .history-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            display: inline-block;
+            width: 80px;
+            color: var(--text-muted);
+        }
+        .desktop-only { display: none !important; }
+    }
+    @media (min-width: 641px) {
+        .mobile-only { display: none !important; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+        <h2>送信履歴</h2>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+            <button id="deleteSelectedBtn" class="btn desktop-only" style="background-color: var(--danger-color); color: white; display: none; padding: 0.5rem 1rem;">
+                選択した項目を削除
+            </button>
+            <span class="badge" style="font-size: 0.9rem;">全 {{ histories|length }} 件</span>
+            <span class="badge badge-primary" style="font-size: 0.9rem;">今月: {{ monthly_sent_count }} / {{ monthly_limit }} 件</span>
+        </div>
+    </div>
+
+    {% if current_user.is_admin and users %}
+    <div class="search-container" style="margin-bottom: var(--spacing-sm);">
+        <form method="get" action="{{ url_for('history.show_history') }}" style="display: flex; gap: 10px; align-items: center; flex-wrap: nowrap;">
+            <select name="user_id" onchange="this.form.submit()" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); flex-grow: 1;">
+                <option value="">全てのユーザー表示</option>
+                {% for user in users %}
+                <option value="{{ user.id }}" {{ 'selected' if selected_user_id == user.id else '' }}>{{ user.real_name or user.username }}</option>
+                {% endfor %}
+            </select>
+            <a href="{{ url_for('history.show_history') }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem; white-space: nowrap;">リセット</a>
+        </form>
+    </div>
+    {% endif %}
+
+    <div class="search-container">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="氏名、会社名、件名などで検索...">
+    </div>
+
+    {% if histories %}
+
+    <div style="overflow-x: auto;">
+        <table class="history-table" id="historyTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px;" class="desktop-only"><input type="checkbox" id="selectAll"></th>
+                    <th class="sortable" data-sort="1">日時 <span class="sort-icon"></span></th>
+                    <th class="sortable" data-sort="2">送信先 <span class="sort-icon"></span></th>
+                    <th class="sortable" data-sort="3">件名 <span class="sort-icon"></span></th>
+                    {% if current_user.is_admin %}
+                    <th class="sortable" data-sort="4">送信者 <span class="sort-icon"></span></th>
+                    {% endif %}
+                    <th style="text-align: right;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for history in histories %}
+                <tr data-id="{{ history.id }}">
+                    <td class="desktop-only" style="text-align: center;" data-label="選択"><input type="checkbox" class="history-checkbox" value="{{ history.id }}"></td>
+                    <td class="date-col" data-label="日時">{{ history.sent_at.strftime('%Y/%m/%d %H:%M') }}</td>
+                    <td data-label="送信先">
+                        <strong>{{ history.customer_name }}</strong> 様<br>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">{{ history.company_name }}</span>
+                    </td>
+                    <td data-label="件名">
+                        {{ history.mail_subject }}
+                    </td>
+                    {% if current_user.is_admin %}
+                    <td data-label="送信者">{{ history.user.real_name or history.user.username }}</td>
+                    {% endif %}
+                    <td style="text-align: right;" data-label="操作">
+                        <button class="btn btn-secondary view-body-btn" 
+                                data-body="{{ history.mail_body }}"
+                                style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">本文</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center" style="padding: var(--spacing-xl);">
+        <p style="color: var(--text-muted);">まだ送信履歴がありません。</p>
+        {% if not current_user.is_admin %}
+        <div class="mt-2">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">名刺をスキャンして送信する</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Email Body Modal -->
+<dialog id="bodyModal" class="card" style="width: 90%; max-width: 700px; padding: 0; border: none; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);">
+    <div style="padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin: 0;">送信メール本文</h3>
+        <button id="closeModal" style="background: none; border: none; cursor: pointer; color: var(--text-muted);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <div id="modalBody" style="padding: var(--spacing-lg); white-space: pre-wrap; font-family: inherit; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+    </div>
+    <div style="padding: var(--spacing-md); border-top: 1px solid var(--border-color); text-align: right;">
+        <button onclick="document.getElementById('bodyModal').close()" class="btn btn-secondary">閉じる</button>
+    </div>
+</dialog>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.history-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const bodyModal = document.getElementById('bodyModal');
+        const modalBody = document.getElementById('modalBody');
+        const closeModal = document.getElementById('closeModal');
+        const searchInput = document.getElementById('searchInput');
+        const historyTable = document.getElementById('historyTable');
+        const tbody = historyTable ? historyTable.querySelector('tbody') : null;
+        const rows = tbody ? Array.from(tbody.querySelectorAll('tr')) : [];
+
+        // Selection Logic
+        function updateDeleteButtonVisibility() {
+            const checkedCount = document.querySelectorAll('.history-checkbox:checked').length;
+            if (deleteSelectedBtn) {
+                deleteSelectedBtn.style.display = checkedCount > 0 ? 'block' : 'none';
+            }
+        }
+
+        if (selectAll) {
+            selectAll.addEventListener('change', () => {
+                const allCheckboxes = document.querySelectorAll('.history-checkbox');
+                allCheckboxes.forEach(cb => {
+                    cb.checked = selectAll.checked;
+                });
+                updateDeleteButtonVisibility();
+            });
+        }
+
+        historyTable.addEventListener('change', (e) => {
+            if (e.target.classList.contains('history-checkbox')) {
+                const val = e.target.value;
+                const matches = document.querySelectorAll(`.history-checkbox[value="${val}"]`);
+                matches.forEach(m => m.checked = e.target.checked);
+                updateDeleteButtonVisibility();
+            }
+        });
+
+        // Modal Logic
+        document.querySelectorAll('.view-body-btn').forEach(btn => {
+            btn.onclick = () => {
+                modalBody.textContent = btn.dataset.body;
+                bodyModal.showModal();
+            };
+        });
+
+        if (closeModal) closeModal.onclick = () => bodyModal.close();
+        if (bodyModal) {
+            bodyModal.onclick = (e) => {
+                if (e.target === bodyModal) bodyModal.close();
+            };
+        }
+
+        // Deletion Logic
+        async function deleteHistories(ids) {
+            if (!confirm(`${ids.length}件の履歴を削除しますか？`)) return;
+
+            try {
+                const response = await fetch('/history/delete', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ ids: ids })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert('エラー: ' + result.message);
+                }
+            } catch (error) {
+                alert('通信エラーが発生しました。');
+            }
+        }
+
+        if (deleteSelectedBtn) {
+            deleteSelectedBtn.onclick = () => {
+                const selectedIds = Array.from(document.querySelectorAll('.history-checkbox:checked'))
+                                         .map(cb => parseInt(cb.value));
+                deleteHistories(selectedIds);
+            };
+        }
+
+        document.querySelectorAll('.delete-single-btn').forEach(btn => {
+            btn.onclick = () => {
+                deleteHistories([parseInt(btn.dataset.id)]);
+            };
+        });
+
+        // Search Logic
+        if (searchInput && tbody) {
+            searchInput.addEventListener('input', () => {
+                const query = searchInput.value.toLowerCase();
+                rows.forEach(row => {
+                    const text = row.innerText.toLowerCase();
+                    row.style.display = text.includes(query) ? '' : 'none';
+                });
+            });
+        }
+
+        // Sort Logic
+        document.querySelectorAll('.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = parseInt(th.dataset.sort);
+                const isAsc = th.classList.contains('asc');
+                
+                document.querySelectorAll('.sortable').forEach(h => h.classList.remove('asc', 'desc'));
+                
+                const sortedRows = rows.sort((a, b) => {
+                    const aVal = a.cells[column].innerText.trim();
+                    const bVal = b.cells[column].innerText.trim();
+                    return isAsc 
+                        ? bVal.localeCompare(aVal, 'ja') 
+                        : aVal.localeCompare(bVal, 'ja');
+                });
+
+                th.classList.toggle('asc', !isAsc);
+                th.classList.toggle('desc', isAsc);
+                tbody.append(...sortedRows);
+            });
+        });
+    });
+</script>
+{% endblock %}

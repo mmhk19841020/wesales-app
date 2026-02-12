@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}ダッシュボード - WeSales{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        text-align: center;
+        border: 1px solid #eee;
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin: 10px 0;
+    }
+    .stat-label {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .chart-container {
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+        border: 1px solid #eee;
+    }
+    .chart-wrapper {
+        position: relative;
+        height: 350px;
+        width: 100%;
+        max-width: 500px;
+    }
+    .dashboard-header {
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .btn-refresh {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: opacity 0.2s;
+    }
+    .btn-refresh:hover {
+        opacity: 0.9;
+    }
+    @media (max-width: 600px) {
+        .chart-wrapper {
+            height: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <h1>配信メトリクス</h1>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span class="badge" style="background: {% if ai_engine == 'gemini' %}#4285f4{% else %}#0078d4{% endif %}; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                AI Engine: {{ ai_engine | upper }}
+            </span>
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn-refresh">データを更新</a>
+        </div>
+    </div>
+
+
+    {% if metrics %}
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">総送信数</div>
+            <div class="stat-value">{{ metrics.total }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">到達件数</div>
+            <div class="stat-value">{{ metrics.counts.delivered }}</div>
+            <div class="stat-label">{{ metrics.rates.delivered }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">開封件数</div>
+            <div class="stat-value">{{ metrics.counts.opened }}</div>
+            <div class="stat-label">{{ metrics.rates.opened }}%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">クリック件数</div>
+            <div class="stat-value">{{ metrics.counts.clicked }}</div>
+            <div class="stat-label">{{ metrics.rates.clicked }}%</div>
+        </div>
+    </div>
+
+    <div class="chart-container">
+        <h2 style="margin-bottom: 20px;">配信ステータス内訳</h2>
+        <div class="chart-wrapper">
+            <canvas id="metricsChart"></canvas>
+        </div>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+        <div class="stat-card" style="border-left: 4px solid #f44336;">
+            <div class="stat-label">バウンス（不達）</div>
+            <div class="stat-value" style="color: #f44336;">{{ metrics.counts.bounced }}</div>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #ff9800;">
+            <div class="stat-label">迷惑メール報告</div>
+            <div class="stat-value" style="color: #ff9800;">{{ metrics.counts.complained }}</div>
+        </div>
+    </div>
+    {% else %}
+    <div class="chart-container">
+        <p>データの取得に失敗しました。ResendのアカウントまたはAPIキーの設定を確認してください。</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('metricsChart').getContext('2d');
+        
+        const data = {
+            labels: ['到達 (未開封)', '開封 (未クリック)', 'クリック済み', 'バウンス', '迷惑メール報告'],
+            datasets: [{
+                data: [
+                    {% if metrics %}
+                    {{ metrics.counts.delivered - metrics.counts.opened if metrics.counts.delivered > metrics.counts.opened else 0 }},
+                    {{ metrics.counts.opened - metrics.counts.clicked if metrics.counts.opened > metrics.counts.clicked else 0 }},
+                    {{ metrics.counts.clicked }},
+                    {{ metrics.counts.bounced }},
+                    {{ metrics.counts.complained }}
+                    {% else %}
+                    0, 0, 0, 0, 0
+                    {% endif %}
+                ],
+                backgroundColor: [
+                    '#4facfe', // 到達
+                    '#00f2fe', // 開封
+                    '#43e97b', // クリック
+                    '#f093fb', // バウンス
+                    '#f5576c'  // 報告
+                ],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + '件';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        };
+
+        new Chart(ctx, config);
+    });
+</script>
+{% endblock %}

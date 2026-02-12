@@ -1,0 +1,22 @@
+c:\CardApp\app.py:17: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:24581
+ * Running on http://172.16.0.4:24581
+Press CTRL+C to quit
+127.0.0.1 - - [11/Feb/2026 20:56:25] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 21:10:14] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 21:13:37] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 21:15:29] "GET /.git/HEAD HTTP/1.1" 404 -
+127.0.0.1 - - [11/Feb/2026 21:33:17] "GET / HTTP/1.1" 302 -
+127.0.0.1 - - [11/Feb/2026 21:51:45] "GET / HTTP/1.1" 302 -

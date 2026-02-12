@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}プロフィール設定 - WeSales{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    @media (min-width: 640px) {
+        .form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .full-width {
+            grid-column: span 2;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md); margin-bottom: var(--spacing-lg);">プロフィール設定</h2>
+    
+    <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="company_name">会社名</label>
+                <input type="text" id="company_name" name="company_name" value="{{ user.company_name or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="job_title">役職</label>
+                <input type="text" id="job_title" name="job_title" value="{{ user.job_title or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="real_name">氏名</label>
+                <input type="text" id="real_name" name="real_name" value="{{ user.real_name or '' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number">電話番号</label>
+                <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number or '' }}">
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="email_address">Email</label>
+                <input type="email" id="email_address" name="email_address" value="{{ user.email_address or '' }}">
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="company_url">URL</label>
+                <input type="url" id="company_url" name="company_url" value="{{ user.company_url or '' }}">
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="business_summary">ビジネス概要</label>
+                <textarea id="business_summary" name="business_summary" rows="4" placeholder="自社の事業内容を簡潔に入力してください">{{ user.business_summary or '' }}</textarea>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">※ この情報はメール生成時に活用されます</p>
+            </div>
+
+            <div class="form-group full-width" style="margin-top: var(--spacing-lg); padding: var(--spacing-md); background-color: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                <label style="font-weight: 600; margin-bottom: var(--spacing-md); display: block;">送信方法の選択</label>
+                <div style="display: flex; gap: var(--spacing-xl); align-items: center;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                        <input type="radio" name="email_provider" value="resend" {{ 'checked' if (user.email_provider or 'resend') == 'resend' else '' }} style="width: auto;">
+                        Resend経由 (info@email.we-sales.com)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                        <input type="radio" name="email_provider" value="gmail" {{ 'checked' if user.email_provider == 'gmail' else '' }} style="width: auto;">
+                        自身のGmail経由 (SMTP)
+                    </label>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">
+                    ※ Resend経由の場合、送信元表示名はあなたの氏名になりますが、メールアドレスはシステムの共通アドレスになります。
+                </p>
+            </div>
+
+            <div id="gmail-settings" class="form-group full-width" style="margin-top: var(--spacing-md); padding: var(--spacing-md); background-color: #f0f7ff; border-radius: var(--radius-md); border-left: 4px solid var(--primary-color); {{ 'display: block;' if user.email_provider == 'gmail' else 'display: none;' }}">
+                <label for="gmail_app_password" style="color: var(--primary-color); font-weight: 600;">Gmail アプリパスワード</label>
+                <input type="password" id="gmail_app_password" name="gmail_app_password" value="{{ user.gmail_app_password or '' }}" placeholder="16桁のコード">
+                
+                <div style="margin-top: var(--spacing-sm); font-size: 0.85rem; color: #1e40af;">
+                    <p style="margin-bottom: 5px; font-weight: 600;">自身のGmailから送信するための設定手順：</p>
+                    <ol style="padding-left: 20px; margin-bottom: 5px;">
+                        <li><a href="https://myaccount.google.com/security" target="_blank" style="text-decoration: underline;">Google アカウント設定</a>を開く</li>
+                        <li>「2段階認証プロセス」を有効にする</li>
+                        <li>設定内の一番下にある「アプリ パスワード」を選択</li>
+                        <li>「WeSales」等の名前で生成された16桁のコードを入力</li>
+                    </ol>
+                    <p>※ 未設定の場合は、送信方法でGmailを選択していてもResend経由で送信されます。</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">設定を保存する</button>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary" style="margin-left: var(--spacing-md);">キャンセル</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('input[name="email_provider"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            const gmailSettings = document.getElementById('gmail-settings');
+            if (e.target.value === 'gmail') {
+                gmailSettings.style.display = 'block';
+            } else {
+                gmailSettings.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %}

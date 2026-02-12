@@ -1,0 +1,382 @@
+{% extends "base.html" %}
+
+{% block title %}名刺一覧 - WeSales{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--spacing-md);
+    }
+    
+    .card-table th, .card-table td {
+        padding: var(--spacing-md);
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        vertical-align: middle;
+    }
+    
+    .card-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+    
+    .card-table tr:hover {
+        background-color: #f1f5f9;
+    }
+
+    .sortable {
+        cursor: pointer;
+        user-select: none;
+        position: relative;
+    }
+
+    .sortable:hover {
+        background-color: #f1f5f9 !important;
+        color: var(--primary-color) !important;
+    }
+
+    .sort-icon::after {
+        content: "↕";
+        margin-left: 5px;
+        font-size: 0.8rem;
+        color: #cbd5e1;
+    }
+
+    th.asc .sort-icon::after {
+        content: "↑";
+        color: var(--primary-color);
+    }
+
+    th.desc .sort-icon::after {
+        content: "↓";
+        color: var(--primary-color);
+    }
+
+    .search-container {
+        margin-bottom: var(--spacing-md);
+        position: relative;
+    }
+
+    /* Force padding and specific styling for search input */
+    #searchInput.search-input {
+        width: 100% !important;
+        padding: 12px 20px 12px 55px !important;
+        border: 1px solid #dfe1e5 !important;
+        border-radius: 24px !important;
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+        transition: box-shadow 0.2s !important;
+        box-shadow: none !important;
+        background-color: white !important;
+        display: block !important;
+    }
+
+    #searchInput.search-input:hover, #searchInput.search-input:focus {
+        outline: none !important;
+        box-shadow: 0 1px 6px rgba(32,33,36,0.28) !important;
+        border-color: rgba(223, 225, 229, 0) !important;
+    }
+
+    .search-icon {
+        position: absolute !important;
+        left: 18px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: #9aa0a6 !important;
+        pointer-events: none !important;
+        z-index: 10 !important;
+    }
+    
+
+    .zoom-modal {
+        width: 90%;
+        max-width: 900px;
+        padding: 0;
+        border: none;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .zoom-modal::backdrop {
+        background: rgba(0, 0, 0, 0.85);
+    }
+
+    .zoom-modal img {
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl);
+    }
+
+    /* Responsive Table */
+    @media (max-width: 640px) {
+        .desktop-only { display: none; }
+        .card-table thead { display: none; }
+        .card-table tr {
+            display: block;
+            border-bottom: 2px solid var(--border-color);
+            padding: var(--spacing-sm) 0;
+            margin-bottom: var(--spacing-md);
+        }
+        .card-table td {
+            display: block;
+            border: none;
+            padding: var(--spacing-xs) 0;
+            width: 100%;
+        }
+        .card-table td[data-label="操作"] {
+            order: -1; /* Place at the top (left end equivalent in mobile block) */
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: var(--spacing-xs);
+        }
+        .card-table td[data-label="操作"]::before { display: none; }
+        .card-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: var(--text-muted);
+            display: inline-block;
+            width: 80px;
+        }
+        .desktop-only { display: none !important; }
+    }
+    @media (min-width: 641px) {
+        .mobile-only { display: none !important; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+        <h2>名刺一覧</h2>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+            <button id="deleteSelectedBtn" class="btn desktop-only" style="background-color: var(--danger-color); color: white; display: none; padding: 0.5rem 1rem;">
+                選択した項目を削除
+            </button>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">+ 名刺を追加</a>
+        </div>
+    </div>
+
+    {% if current_user.is_admin and users %}
+    <div class="search-container" style="margin-bottom: var(--spacing-sm);">
+        <form method="get" action="{{ url_for('cards.show_cards') }}" style="display: flex; gap: 10px; align-items: center; flex-wrap: nowrap;">
+            <select name="user_id" onchange="this.form.submit()" style="padding: 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); flex-grow: 1;">
+                <option value="">全てのユーザー表示</option>
+                {% for user in users %}
+                <option value="{{ user.id }}" {{ 'selected' if selected_user_id == user.id else '' }}>{{ user.real_name or user.username }}</option>
+                {% endfor %}
+            </select>
+            <a href="{{ url_for('cards.show_cards') }}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem; white-space: nowrap;">リセット</a>
+        </form>
+    </div>
+    {% endif %}
+
+    <!-- Eight CSV Import Section -->
+    {% if not current_user.is_admin %}
+    <div style="background-color: #f8fafc; border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+        <h3 style="font-size: 1rem; margin-bottom: var(--spacing-sm); color: var(--text-color); display: flex; align-items: center; gap: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Eight CSVインポート
+        </h3>
+        <form action="{{ url_for('import.import_eight') }}" method="POST" enctype="multipart/form-data" style="display: flex; gap: var(--spacing-sm); align-items: center; flex-wrap: wrap;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="file" name="csv_file" accept=".csv" required style="font-size: 0.85rem; flex: 1; min-width: 200px;">
+            <button type="submit" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">アップロード</button>
+        </form>
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">※ Eightからエクスポートした名刺CSVをそのまま取り込めます。重複はメールアドレスで判断されます。</p>
+    </div>
+    {% endif %}
+
+    <div class="search-container">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="会社名や氏名で検索...">
+    </div>
+
+    {% if cards %}
+
+    <div style="overflow-x: auto;">
+        <table class="card-table" id="cardTable">
+            <thead>
+                <tr>
+                    <th style="width: 40px; text-align: center;" class="desktop-only"><input type="checkbox" id="selectAll"></th>
+                    <th class="sortable" data-sort="2">会社名 <span class="sort-icon"></span></th>
+                    <th class="sortable" data-sort="3">氏名 <span class="sort-icon"></span></th>
+                    {% if current_user.is_admin %}
+                    <th class="sortable" data-sort="4">登録者 <span class="sort-icon"></span></th>
+                    {% endif %}
+                    <th style="width: 200px; text-align: right;">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for card in cards %}
+                <tr>
+                    <td style="text-align: center;" data-label="選択" class="desktop-only">
+                        <input type="checkbox" class="card-checkbox" value="{{ card.id }}">
+                    </td>
+                    <td data-label="会社名">{{ card.company_name or '不明' }}</td>
+                    <td data-label="氏名">{{ card.person_name or '不明' }}</td>
+                    {% if current_user.is_admin %}
+                    <td data-label="登録者">{{ card.user.real_name or card.user.username }}</td>
+                    {% endif %}
+                    <td data-label="操作" style="text-align: right;">
+                        <a href="{{ url_for('cards.create_email_page', card_id=card.id) }}" class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin-right: 4px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 3px; vertical-align: middle;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>メール作成
+                        </a>
+                        <a href="{{ url_for('cards.card_detail', card_id=card.id) }}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">詳細</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="text-center" style="padding: var(--spacing-xl);">
+        <p style="color: var(--text-muted);">まだ登録された名刺がありません。</p>
+        {% if not current_user.is_admin %}
+        <div class="mt-2">
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">名刺をスキャンして登録する</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Image Zoom Modal -->
+<dialog id="zoomModal" class="zoom-modal" onclick="this.close()">
+    <img id="zoomedImg" src="" alt="拡大画像" onclick="event.stopPropagation()">
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 5px 20px; cursor: pointer;">クリックで閉じる</button>
+    </div>
+</dialog>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const zoomModal = document.getElementById('zoomModal');
+    const zoomedImg = document.getElementById('zoomedImg');
+
+    function zoomImage(src) {
+        zoomedImg.src = src;
+        zoomModal.showModal();
+    }
+
+    // Escape key closes modal automatically by dialog's default behavior
+
+    // Search and Sort Logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        const cardTable = document.getElementById('cardTable');
+        const tbody = cardTable.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        // Seach and Bulk Delete Logic
+        const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('.card-checkbox');
+
+        function updateDeleteButtonVisibility() {
+            const checkedCount = document.querySelectorAll('.card-checkbox:checked').length;
+            if (deleteSelectedBtn) {
+                deleteSelectedBtn.style.display = checkedCount > 0 ? 'block' : 'none';
+            }
+        }
+
+        if (selectAll) {
+            selectAll.addEventListener('change', () => {
+                // Select all checkboxes in the items that are currently visible
+                const currentCheckboxes = document.querySelectorAll('.card-checkbox');
+                currentCheckboxes.forEach(cb => {
+                    cb.checked = selectAll.checked;
+                });
+                updateDeleteButtonVisibility();
+            });
+        }
+
+        cardTable.addEventListener('change', (e) => {
+            if (e.target.classList.contains('card-checkbox')) {
+                // Also toggle the "other" checkbox for the same card if it exists (desktop vs mobile)
+                const val = e.target.value;
+                const matches = document.querySelectorAll(`.card-checkbox[value="${val}"]`);
+                matches.forEach(m => m.checked = e.target.checked);
+                
+                updateDeleteButtonVisibility();
+            }
+        });
+
+        async function deleteCards(ids) {
+            if (!confirm(`${ids.length}件の名刺を削除しますか？`)) return;
+
+            try {
+                const response = await fetch('/cards/delete', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ ids: ids })
+                });
+                
+                const result = await response.json();
+                if (response.ok) {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert('エラー: ' + result.message);
+                }
+            } catch (error) {
+                alert('通信エラーが発生しました。');
+            }
+        }
+
+        if (deleteSelectedBtn) {
+            deleteSelectedBtn.onclick = () => {
+                const selectedIds = Array.from(document.querySelectorAll('.card-checkbox:checked'))
+                                         .map(cb => parseInt(cb.value));
+                deleteCards(selectedIds);
+            };
+        }
+
+        // Search
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+
+        // Sort
+        document.querySelectorAll('.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                const column = parseInt(th.dataset.sort);
+                const isAsc = th.classList.contains('asc');
+                
+                // Clear other headers
+                document.querySelectorAll('.sortable').forEach(h => h.classList.remove('asc', 'desc'));
+                
+                // Sort rows
+                const sortedRows = rows.sort((a, b) => {
+                    const aCell = a.cells[column];
+                    const bCell = b.cells[column];
+                    if (!aCell || !bCell) return 0;
+                    const aVal = aCell.innerText.trim();
+                    const bVal = bCell.innerText.trim();
+                    return isAsc 
+                        ? bVal.localeCompare(aVal, 'ja') 
+                        : aVal.localeCompare(bVal, 'ja');
+                });
+
+                // Update UI
+                th.classList.toggle('asc', !isAsc);
+                th.classList.toggle('desc', isAsc);
+                tbody.append(...sortedRows);
+            });
+        });
+    });
+</script>
+{% endblock %}
