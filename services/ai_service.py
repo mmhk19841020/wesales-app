@@ -4,6 +4,7 @@ from azure.ai.vision.imageanalysis.models import VisualFeatures
 from azure.core.credentials import AzureKeyCredential
 from openai import AzureOpenAI
 import google.generativeai as genai
+
 from config import Config
 
 def get_vision_client():
