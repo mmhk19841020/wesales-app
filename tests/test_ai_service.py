@@ -25,16 +25,15 @@ class TestAIService:
         assert result == "テスト応答"
         mock_client.chat.completions.create.assert_called_once()
     
-    @patch("services.ai_service.genai.GenerativeModel")
-    @patch("services.ai_service.configure_gemini")
-    def test_get_ai_completion_gemini(self, mock_configure, mock_model_class):
+    @patch("services.ai_service.get_gemini_client")
+    def test_get_ai_completion_gemini(self, mock_get_client):
         """Gemini でのテキスト生成テスト"""
         # モックの設定
-        mock_model = MagicMock()
+        mock_client = MagicMock()
         mock_response = MagicMock()
         mock_response.text = "Gemini応答"
-        mock_model.generate_content.return_value = mock_response
-        mock_model_class.return_value = mock_model
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         
         # テスト実行
         with patch("services.ai_service.Config.AI_ENGINE_TYPE", "gemini"):
@@ -42,15 +41,13 @@ class TestAIService:
         
         # 検証
         assert result == "Gemini応答"
-        mock_configure.assert_called()
-        mock_model.generate_content.assert_called_once()
+        mock_client.models.generate_content.assert_called_once()
     
-    @patch("services.ai_service.genai.GenerativeModel")
-    @patch("services.ai_service.configure_gemini")
-    def test_analyze_card_image_gemini(self, mock_configure, mock_model_class):
+    @patch("services.ai_service.get_gemini_client")
+    def test_analyze_card_image_gemini(self, mock_get_client):
         """Gemini での名刺画像解析テスト"""
         # モックの設定
-        mock_model = MagicMock()
+        mock_client = MagicMock()
         mock_response = MagicMock()
         test_data = {
             "name": "山田 太郎",
@@ -62,18 +59,21 @@ class TestAIService:
             "phone": "03-1234-5678"
         }
         mock_response.text = json.dumps(test_data)
-        mock_model.generate_content.return_value = mock_response
-        mock_model_class.return_value = mock_model
+        mock_client.models.generate_content.return_value = mock_response
+        mock_get_client.return_value = mock_client
         
         # テスト実行
         with patch("services.ai_service.Config.AI_ENGINE_TYPE", "gemini"):
-            result = analyze_card_image(b"fake-image-data", "test.jpg")
+            # Mock types.Part.from_bytes to prevent import errors in test environment if SDK not full mocked
+            with patch("services.ai_service.genai.types.Part.from_bytes") as mock_from_bytes:
+                mock_from_bytes.return_value = MagicMock()
+                result = analyze_card_image(b"fake-image-data", "test.jpg")
         
         # 検証
         assert result["name"] == "山田 太郎"
         assert result["company"] == "テスト株式会社"
         assert result["email"] == "yamada@test.example.com"
-        mock_model.generate_content.assert_called_once()
+        mock_client.models.generate_content.assert_called_once()
     
     @patch("services.ai_service.get_openai_client")
     @patch("services.ai_service.get_vision_client")

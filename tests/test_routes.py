@@ -31,7 +31,7 @@ def test_cards_list_authenticated(auth_client):
     assert response.status_code == 200
     assert "名刺一覧".encode("utf-8") in response.data
 
-@patch("services.ai_service.analyze_card_image")
+@patch("routes.cards.analyze_card_image")
 def test_upload_card_mocked(mock_analyze, auth_client):
     """名刺アップロードのモックテスト"""
     mock_analyze.return_value = {
@@ -57,8 +57,8 @@ def test_upload_card_mocked(mock_analyze, auth_client):
     assert card is not None
     assert card.company_name == "モック株式会社"
 
-@patch("services.web_service.get_company_info")
-@patch("services.ai_service.get_ai_completion")
+@patch("routes.cards.get_company_info")
+@patch("routes.cards.get_ai_completion")
 def test_generate_email_mocked(mock_ai, mock_web, auth_client, app):
     """メール生成画面のモックテスト"""
     mock_ai.return_value = json.dumps({

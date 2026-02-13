@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,27 +12,52 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
     {% if current_user.is_authenticated %}
     <header>
         <div class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-            WeSales {% if current_user.is_admin %}<span style="font-size: 1.1rem; margin-left: 10px; color: var(--primary-color); font-weight: bold;">管理者メニュー</span>{% endif %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+            </svg>
+            WeSales {% if current_user.is_admin %}<span
+                style="font-size: 1.1rem; margin-left: 10px; color: var(--primary-color); font-weight: bold;">管理者メニュー</span>{%
+            endif %}
         </div>
         <button class="mobile-menu-btn" aria-label="メニュー" onclick="toggleMenu()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
         </button>
         <nav id="nav-menu">
             {% if not current_user.is_admin %}
-            <a href="{{ url_for('main.index') }}" class="{{ 'active' if request.endpoint == 'main.index' else '' }}">ホーム</a>
-            <a href="{{ url_for('cards.show_cards') }}" class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}">名刺一覧</a>
-            <a href="{{ url_for('main.profile') }}" class="{{ 'active' if request.endpoint == 'main.profile' else '' }}">プロフィール</a>
-            <a href="{{ url_for('history.show_history') }}" class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}">送信履歴</a>
+            <a href="{{ url_for('main.index') }}"
+                class="{{ 'active' if request.endpoint == 'main.index' else '' }}">ホーム</a>
+            <a href="{{ url_for('cards.show_cards') }}"
+                class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}">名刺一覧</a>
+            <a href="{{ url_for('main.profile') }}"
+                class="{{ 'active' if request.endpoint == 'main.profile' else '' }}">プロフィール</a>
+            <a href="{{ url_for('history.show_history') }}"
+                class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}">送信履歴</a>
             {% else %}
-            <a href="{{ url_for('admin.admin_users') }}" class="{{ 'active' if request.endpoint == 'admin.admin_users' else '' }}" style="color: var(--primary-color);">ユーザー管理</a>
-            <a href="{{ url_for('admin.admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.admin_dashboard' else '' }}" style="color: var(--primary-color);">ダッシュボード</a>
-            <a href="{{ url_for('cards.show_cards') }}" class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}" style="color: var(--primary-color);">名刺一覧</a>
-            <a href="{{ url_for('history.show_history') }}" class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}" style="color: var(--primary-color);">送信履歴</a>
+            <a href="{{ url_for('admin.admin_users') }}"
+                class="{{ 'active' if request.endpoint == 'admin.admin_users' else '' }}"
+                style="color: var(--primary-color);">ユーザー管理</a>
+            <a href="{{ url_for('admin.admin_dashboard') }}"
+                class="{{ 'active' if request.endpoint == 'admin.admin_dashboard' else '' }}"
+                style="color: var(--primary-color);">ダッシュボード</a>
+            <a href="{{ url_for('cards.show_cards') }}"
+                class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}"
+                style="color: var(--primary-color);">名刺一覧</a>
+            <a href="{{ url_for('history.show_history') }}"
+                class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}"
+                style="color: var(--primary-color);">送信履歴</a>
             {% endif %}
             <a href="{{ url_for('auth.logout') }}" class="logout">ログアウト</a>
         </nav>
@@ -41,18 +67,31 @@
             const nav = document.getElementById('nav-menu');
             nav.classList.toggle('active');
         }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (event) {
+            const nav = document.getElementById('nav-menu');
+            const btn = document.querySelector('.mobile-menu-btn');
+
+            if (nav.classList.contains('active') &&
+                !nav.contains(event.target) &&
+                !btn.contains(event.target)) {
+                nav.classList.remove('active');
+            }
+        });
     </script>
     {% endif %}
 
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }}" style="padding: 1rem; margin-bottom: 1rem; border-radius: var(--radius-md); background-color: {{ '#dcfce7' if category == 'success' else '#fef2f2' }}; color: {{ '#166534' if category == 'success' else '#991b1b' }}; border: 1px solid {{ '#bbf7d0' if category == 'success' else '#fecaca' }};">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}"
+            style="padding: 1rem; margin-bottom: 1rem; border-radius: var(--radius-md); background-color: {{ '#dcfce7' if category == 'success' else '#fef2f2' }}; color: {{ '#166534' if category == 'success' else '#991b1b' }}; border: 1px solid {{ '#bbf7d0' if category == 'success' else '#fecaca' }};">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
@@ -63,4 +102,5 @@
 
     {% block scripts %}{% endblock %}
 </body>
+
 </html>

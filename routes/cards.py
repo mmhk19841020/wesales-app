@@ -37,7 +37,7 @@ def upload():
     try:
         file = request.files["image"]
         filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
-        save_dir = Config.UPLOAD_FOLDER
+        save_dir = current_app.config["UPLOAD_FOLDER"]
         os.makedirs(save_dir, exist_ok=True)
         save_path = os.path.join(save_dir, filename)
         file.save(save_path)
@@ -68,7 +68,9 @@ def upload():
 @cards_bp.route("/cards/<int:card_id>")
 @login_required
 def card_detail(card_id):
-    card = Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if not card:
+        abort(404)
     if not current_user.is_admin and card.user_id != current_user.id:
         abort(403)
     return render_template("card_detail.html", card=card)
@@ -76,7 +78,9 @@ def card_detail(card_id):
 @cards_bp.route("/cards/<int:card_id>/edit", methods=["GET", "POST"])
 @login_required
 def card_edit(card_id):
-    card = Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if not card:
+        abort(404)
     if not current_user.is_admin and card.user_id != current_user.id:
         abort(403)
         
@@ -97,7 +101,9 @@ def card_edit(card_id):
 @cards_bp.route("/cards/<int:card_id>/delete", methods=["POST"])
 @login_required
 def card_delete(card_id):
-    card = Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if not card:
+        abort(404)
     if not current_user.is_admin and card.user_id != current_user.id:
         abort(403)
         
@@ -130,7 +136,9 @@ def bulk_delete_cards():
 @cards_bp.route("/create_email/<int:card_id>")
 @login_required
 def create_email_page(card_id):
-    card = Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if not card:
+        abort(404)
     if card.user_id != current_user.id:
         return redirect(url_for('main.index'))
     return render_template("create_email.html", card=card)
@@ -138,7 +146,9 @@ def create_email_page(card_id):
 @cards_bp.route("/api/generate_initial_email/<int:card_id>")
 @login_required
 def generate_initial_email(card_id):
-    card = Card.query.get_or_404(card_id)
+    card = db.session.get(Card, card_id)
+    if not card:
+        abort(404)
     if card.user_id != current_user.id:
         return jsonify({"error": "Unauthorized"}), 403
 

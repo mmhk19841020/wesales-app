@@ -3,7 +3,7 @@ from azure.ai.vision.imageanalysis import ImageAnalysisClient
 from azure.ai.vision.imageanalysis.models import VisualFeatures
 from azure.core.credentials import AzureKeyCredential
 from openai import AzureOpenAI
-import google.generativeai as genai
+from google import genai
 
 from config import Config
 
@@ -43,17 +43,24 @@ def get_openai_client():
 
 
 
-def configure_gemini():
+def get_gemini_client():
     if Config.GEMINI_API_KEY:
-        genai.configure(api_key=Config.GEMINI_API_KEY)
+        return genai.Client(api_key=Config.GEMINI_API_KEY)
+    return None
 
 def list_gemini_models():
     """利用可能なGeminiモデルをデバッグ出力する"""
     try:
-        configure_gemini()
+        client = get_gemini_client()
+        if not client:
+            print("Gemini API Key not configured.")
+            return
+
         print("--- Available Gemini Models ---")
-        for m in genai.list_models():
-            print(f"Name: {m.name}, DisplayName: {m.display_name}, Methods: {m.supported_generation_methods}")
+        # Note: list_models in new SDK might differ, using simple iteration if iterable or verifying documentation.
+        # Assuming client.models.list() exists and returns models.
+        for m in client.models.list():
+            print(f"Name: {m.name}, DisplayName: {m.display_name}")
         print("-------------------------------")
     except Exception as e:
         print(f"Error listing Gemini models: {str(e)}")
@@ -61,24 +68,31 @@ def list_gemini_models():
 def get_ai_completion(prompt, system_prompt="You are a professional business assistant.", response_format=None):
     """Azure OpenAI または Gemini を使用してテキスト生成を行う"""
     if Config.AI_ENGINE_TYPE == "gemini":
-        configure_gemini()
+        client = get_gemini_client()
+        if not client:
+             raise Exception("Gemini API Key is not configured.")
+
         # 429 (Rate Limit) への対策としてリトライ処理を追加
         import time
         max_retries = 3
         for attempt in range(max_retries):
             try:
                 # 利用可能な最新の安定版 'gemini-2.0-flash' を使用
-                model = genai.GenerativeModel(
-                    model_name="gemini-2.0-flash",
-                    system_instruction=system_prompt
-                )
-                generation_config = {}
+                config = {}
                 if response_format == "json_object":
-                    generation_config["response_mime_type"] = "application/json"
+                    config["response_mime_type"] = "application/json"
                 
-                response = model.generate_content(prompt, generation_config=generation_config)
+                if system_prompt:
+                    config["system_instruction"] = system_prompt
+
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=prompt,
+                    config=config
+                )
                 return response.text
             except Exception as e:
+                # SDK might raise custom errors, but checking string for 429 is a safe fallback
                 if "429" in str(e) and attempt < max_retries - 1:
                     time.sleep(2 ** attempt) # 指数バックオフ
                     continue
@@ -110,13 +124,14 @@ def get_ai_completion(prompt, system_prompt="You are a professional business ass
 def analyze_card_image(image_data, filename):
     """名刺画像を解析して構造化データを返す"""
     if Config.AI_ENGINE_TYPE == "gemini":
-        configure_gemini()
+        client = get_gemini_client()
+        if not client:
+             raise Exception("Gemini API Key is not configured.")
+
         import time
         max_retries = 3
         for attempt in range(max_retries):
             try:
-                # 最新の 2.0-flash モデルを使用
-                model = genai.GenerativeModel("gemini-2.0-flash")
                 prompt = """
                 あなたはプロのビジネス・アシスタントです。
                 提供された名刺画像から情報を抽出し、以下のJSON形式でのみ回答してください。
@@ -125,16 +140,25 @@ def analyze_card_image(image_data, filename):
                 name, company, department, title, url, email, phone
                 """
                 
-                mime_type = "image/jpeg"
+                # New SDK handles generic Part objects or directly accepts compatible types
+                from google.genai import types
+                
+                # Create image part
+                # Assuming image_data is bytes
+                # We can construct the content part
+                image_part = types.Part.from_bytes(data=image_data, mime_type="image/jpeg") # Default to jpeg, adjust as needed or rely on SDK detection if possible
+                
+                # Adjust mime type based on filename if needed
                 if filename.lower().endswith(".png"):
-                    mime_type = "image/png"
+                    image_part = types.Part.from_bytes(data=image_data, mime_type="image/png")
                 elif filename.lower().endswith(".webp"):
-                    mime_type = "image/webp"
+                    image_part = types.Part.from_bytes(data=image_data, mime_type="image/webp")
 
-                response = model.generate_content([
-                    prompt,
-                    {"mime_type": mime_type, "data": image_data}
-                ], generation_config={"response_mime_type": "application/json"})
+                response = client.models.generate_content(
+                    model="gemini-2.0-flash",
+                    contents=[prompt, image_part],
+                    config={"response_mime_type": "application/json"}
+                )
                 return json.loads(response.text)
             except Exception as e:
                 if "429" in str(e) and attempt < max_retries - 1:

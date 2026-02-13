@@ -2,7 +2,7 @@ from flask import Flask
 from config import Config
 from extensions import db, bcrypt, csrf, talisman, login_manager
 from models import User
-from datetime import datetime
+from datetime import datetime, timezone
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -12,7 +12,10 @@ def create_app(config_class=Config):
     db.init_app(app)
     bcrypt.init_app(app)
     csrf.init_app(app)
-    talisman.init_app(app, content_security_policy=None)
+    # Configure Talisman
+    # Disable HTTPS enforcement in testing to avoid 302 redirects
+    force_https = not app.config.get("TESTING", False)
+    talisman.init_app(app, content_security_policy=None, force_https=force_https)
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -22,7 +25,7 @@ def create_app(config_class=Config):
     # Context Processor
     @app.context_processor
     def inject_now():
-        return {"now": datetime.utcnow()}
+        return {"now": datetime.now(timezone.utc)}
 
     # Register Blueprints
     from routes.auth import auth_bp
