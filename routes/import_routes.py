@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, flash
 from flask_login import current_user, login_required
-from services.csv_service import process_eight_csv
+from services.csv_service import process_csv_import
 
 import_bp = Blueprint("import", __name__)
 
@@ -22,7 +22,7 @@ def import_eight():
 
     try:
         content = file.read()
-        count_success, count_updated = process_eight_csv(content, current_user.id)
+        count_success, count_updated = process_csv_import(content, current_user.id)
         flash(f"インポート完了: {count_success}件を新規登録、{count_updated}件を更新しました。", "success")
     except Exception as e:
         flash(f"エラーが発生しました: {str(e)}", "error")

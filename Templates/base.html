@@ -37,29 +37,95 @@
         </button>
         <nav id="nav-menu">
             {% if not current_user.is_admin %}
-            <a href="{{ url_for('main.index') }}"
-                class="{{ 'active' if request.endpoint == 'main.index' else '' }}">ホーム</a>
+            <a href="{{ url_for('main.index') }}" class="{{ 'active' if request.endpoint == 'main.index' else '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z" />
+                    <path d="M9 22V12h6v10" />
+                </svg>ホーム
+            </a>
             <a href="{{ url_for('cards.show_cards') }}"
-                class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}">名刺一覧</a>
+                class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>名刺一覧
+            </a>
             <a href="{{ url_for('main.profile') }}"
-                class="{{ 'active' if request.endpoint == 'main.profile' else '' }}">プロフィール</a>
+                class="{{ 'active' if request.endpoint == 'main.profile' else '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>プロフィール
+            </a>
             <a href="{{ url_for('history.show_history') }}"
-                class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}">送信履歴</a>
+                class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                </svg>送信履歴
+            </a>
             {% else %}
             <a href="{{ url_for('admin.admin_users') }}"
                 class="{{ 'active' if request.endpoint == 'admin.admin_users' else '' }}"
-                style="color: var(--primary-color);">ユーザー管理</a>
+                style="color: var(--primary-color);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>ユーザー管理
+            </a>
             <a href="{{ url_for('admin.admin_dashboard') }}"
                 class="{{ 'active' if request.endpoint == 'admin.admin_dashboard' else '' }}"
-                style="color: var(--primary-color);">ダッシュボード</a>
+                style="color: var(--primary-color);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                    <path d="M3 9h18" />
+                    <path d="M9 21V9" />
+                </svg>ダッシュボード
+            </a>
             <a href="{{ url_for('cards.show_cards') }}"
                 class="{{ 'active' if request.endpoint == 'cards.show_cards' else '' }}"
-                style="color: var(--primary-color);">名刺一覧</a>
+                style="color: var(--primary-color);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                </svg>名刺一覧
+            </a>
             <a href="{{ url_for('history.show_history') }}"
                 class="{{ 'active' if request.endpoint == 'history.show_history' else '' }}"
-                style="color: var(--primary-color);">送信履歴</a>
+                style="color: var(--primary-color);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                    <path d="M3 3v5h5" />
+                </svg>送信履歴
+            </a>
             {% endif %}
-            <a href="{{ url_for('auth.logout') }}" class="logout">ログアウト</a>
+            <a href="{{ url_for('auth.logout') }}" class="logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="margin-right: 8px; vertical-align: middle;">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>ログアウト
+            </a>
         </nav>
     </header>
     <script>

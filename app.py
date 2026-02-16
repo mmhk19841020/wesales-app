@@ -1,3 +1,13 @@
+import sys
+import os
+try:
+    import google
+    print(f"DEBUG: python path: {sys.executable}")
+    print(f"DEBUG: sys.path: {sys.path}")
+    print(f"DEBUG: google path: {google.__path__}")
+except Exception as e:
+    print(f"DEBUG: Error importing google: {e}")
+
 from flask import Flask
 from config import Config
 from extensions import db, bcrypt, csrf, talisman, login_manager
@@ -14,8 +24,8 @@ def create_app(config_class=Config):
     csrf.init_app(app)
     # Configure Talisman
     # Disable HTTPS enforcement in testing to avoid 302 redirects
-    force_https = not app.config.get("TESTING", False)
-    talisman.init_app(app, content_security_policy=None, force_https=force_https)
+#    force_https = not app.config.get("TESTING", False)
+#    talisman.init_app(app, content_security_policy=None, force_https=force_https)
     login_manager.init_app(app)
 
     @login_manager.user_loader
@@ -48,18 +58,16 @@ app = create_app()
 
 import os
 
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    
-    # IIS (httpPlatformHandler) passes the port via the PORT environment variable
-    port_env = os.environ.get("PORT", "5000")
-    try:
-        port = int(port_env)
-    except ValueError:
-        port = 5000
-        
-    # debug=True is okay for error pages, but use_reloader=False is critical on IIS
-    # to avoid the reloader spawning a child process that IIS won't manage correctly.
-    app.run(host='127.0.0.1', port=port, debug=True, use_reloader=False)
+# 【重要】IISで動かす際、データベース作成を確実に行うため if の外に出します
+with app.app_context():
+    db.create_all()
 
+if __name__ == "__main__":
+    # 手元のPCでのデバッグ用設定
+    # ポートは手元で動作確認が取れた「5001」をデフォルトにします
+    import os
+    port = int(os.environ.get("PORT", 5001))
+    
+    # host='0.0.0.0' にすることで、AzureのIISからの通信を受け取れるようにします
+    # use_reloader=False は、IIS上での二重起動エラーを防ぐために必須です
+    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)

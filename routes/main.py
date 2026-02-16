@@ -71,10 +71,23 @@ def profile():
     if request.method == "POST":
         current_user.company_name = request.form.get("company_name")
         current_user.job_title = request.form.get("job_title")
-        current_user.real_name = request.form.get("real_name")
+        
+        last_name = request.form.get("last_name")
+        first_name = request.form.get("first_name")
+        if last_name or first_name:
+            current_user.last_name = last_name
+            current_user.first_name = first_name
+        else:
+             current_user.real_name = request.form.get("real_name")
+             
         current_user.phone_number = request.form.get("phone_number")
         current_user.email_address = request.form.get("email_address")
-        current_user.company_url = request.form.get("company_url")
+        
+        url = request.form.get("company_url")
+        if url and url.startswith("www."):
+            url = "http://" + url
+        current_user.company_url = url
+        
         current_user.business_summary = request.form.get("business_summary")
         current_user.gmail_app_password = request.form.get("gmail_app_password")
         current_user.email_provider = request.form.get("email_provider", "resend")

@@ -4,7 +4,8 @@
 
 {% block content %}
 <div class="card" style="max-width: 800px; margin: 0 auto;">
-    <h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+    <h2
+        style="border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-md); margin-bottom: var(--spacing-lg);">
         メール作成
         <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-muted); margin-left: 10px;">
             To: {{ card.company_name }} {{ card.person_name }} 様
@@ -12,9 +13,16 @@
     </h2>
 
     <!-- Rewrite Section -->
-    <div style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
+    <div
+        style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-md); padding: var(--spacing-md); margin-bottom: var(--spacing-lg);">
         <label style="color: #0369a1; display: flex; align-items: center; gap: 8px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/><line x1="16.5" y1="3.5" x2="22" y2="9"/><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 12"/><path d="M21 3v9"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                <line x1="16.5" y1="3.5" x2="22" y2="9" />
+                <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 12" />
+                <path d="M21 3v9" />
+            </svg>
             AIへの調整指示
         </label>
         <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
@@ -29,20 +37,26 @@
         <label for="targetEmail">宛先メールアドレス</label>
         <input type="email" id="targetEmail" value="{{ card.email or '' }}">
     </div>
-    
+
     <div class="form-group">
         <label for="mailSubject">件名</label>
         <input type="text" id="mailSubject" placeholder="AIが件名を生成します...">
     </div>
-    
+
     <div class="form-group">
         <label for="mailBody">メール本文</label>
-        <textarea id="mailBody" rows="15" style="font-family: inherit; line-height: 1.6;" placeholder="AIが本文を生成します..."></textarea>
+        <textarea id="mailBody" rows="15" style="font-family: inherit; line-height: 1.6;"
+            placeholder="AIが本文を生成します..."></textarea>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 5px;">※ 内容を自由に編集できます</p>
     </div>
-    
+
     <button id="sendBtn" class="btn btn-primary btn-block" style="font-size: 1.1rem; padding: 1rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            style="margin-right: 8px;">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+        </svg>
         メール送信
     </button>
 </div>
@@ -63,13 +77,13 @@
     const mailBody = document.getElementById('mailBody');
     const sendBtn = document.getElementById('sendBtn');
     const loadingDiv = document.getElementById('loading');
-    
+
     // Card info for rewrite
     const cardInfo = {
         id: "{{ card.id }}",
-        name: "{{ card.person_name }}",
-        company: "{{ card.company_name }}",
-        title: "{{ card.job_title }}"
+        name: `{{ card.person_name }}`,
+        company: `{{ card.company_name }}`,
+        title: `{{ card.job_title }}`
     };
 
     // Initial draft generation
@@ -96,9 +110,9 @@
 
     // Send Email
     sendBtn.onclick = async () => {
-        if (!targetEmail.value) { 
-            alert("宛先メールアドレスを入力してください。"); 
-            return; 
+        if (!targetEmail.value) {
+            alert("宛先メールアドレスを入力してください。");
+            return;
         }
         if (!confirm(targetEmail.value + " 宛に送信しますか？")) return;
 
@@ -110,14 +124,14 @@
             to: targetEmail.value,
             subject: mailSubject.value,
             body: mailBody.value,
-            customer_name: cardInfo.name, 
+            customer_name: cardInfo.name,
             company_name: cardInfo.company
         };
 
         try {
             const res = await fetch('/send', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
                 },
@@ -140,7 +154,7 @@
     // Rewrite with AI
     const rewriteBtn = document.getElementById('rewriteBtn');
     const toneInstruction = document.getElementById('toneInstruction');
-    
+
     rewriteBtn.onclick = async () => {
         if (!toneInstruction.value) return;
 
@@ -150,7 +164,7 @@
         try {
             const response = await fetch('/rewrite', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
                 },

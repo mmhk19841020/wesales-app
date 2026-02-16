@@ -7,6 +7,11 @@ from google import genai
 
 from config import Config
 
+import io
+
+
+from PIL import Image
+
 def get_vision_client():
     if not Config.VISION_KEY or not Config.VISION_ENDPOINT:
         return None
@@ -90,6 +95,13 @@ def get_ai_completion(prompt, system_prompt="You are a professional business ass
                     contents=prompt,
                     config=config
                 )
+                if response_format == "json_object":
+                    parsed_res = json.loads(response.text)
+                    # リスト形式 [{...}] で返ってきた場合、最初の1件を取り出す
+                    if isinstance(parsed_res, list) and len(parsed_res) > 0:
+                        return parsed_res[0]
+                    return parsed_res
+                
                 return response.text
             except Exception as e:
                 # SDK might raise custom errors, but checking string for 429 is a safe fallback
@@ -122,7 +134,24 @@ def get_ai_completion(prompt, system_prompt="You are a professional business ass
 
 
 def analyze_card_image(image_data, filename):
-    """名刺画像を解析して構造化データを返す"""
+#"""名刺画像をリサイズしてから解析して構造化データを返す"""
+    
+    # --- 画像リサイズ処理の追加 ---
+    try:
+        img = Image.open(io.BytesIO(image_data))
+        # アスペクト比を維持したまま、最大幅を1200pxに制限
+        max_size = 1200
+        if img.width > max_size or img.height > max_size:
+            img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+            
+            # リサイズした画像をバイトデータに戻す
+            output = io.BytesIO()
+            img.save(output, format="JPEG", quality=85) # 圧縮率85%でJPEG保存
+            image_data = output.getvalue()
+            print(f"DEBUG: Image resized to {img.width}x{img.height}")
+    except Exception as e:
+        print(f"DEBUG: Resize failed, using original: {e}")
+
     if Config.AI_ENGINE_TYPE == "gemini":
         client = get_gemini_client()
         if not client:
@@ -159,7 +188,13 @@ def analyze_card_image(image_data, filename):
                     contents=[prompt, image_part],
                     config={"response_mime_type": "application/json"}
                 )
-                return json.loads(response.text)
+                parsed_res = json.loads(response.text)
+                
+                # Geminiが [{...}] のようにリストで返してきた場合、最初の1件(辞書)を取り出す
+                if isinstance(parsed_res, list) and len(parsed_res) > 0:
+                    return parsed_res[0]
+                
+                return parsed_res
             except Exception as e:
                 if "429" in str(e) and attempt < max_retries - 1:
                     time.sleep(2 ** attempt)

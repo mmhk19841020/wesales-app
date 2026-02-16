@@ -1,6 +1,6 @@
 import io
 import pytest
-from services.csv_service import process_eight_csv
+from services.csv_service import process_csv_import
 from models import Card, User
 from extensions import db
 
@@ -15,7 +15,7 @@ def test_process_eight_csv_success(app):
             "佐藤,花子,テスト株式会社,,主任,sato@example.com,03-8765-4321,,https://test.co.jp\n"
         ).encode("utf-8-sig")
         
-        success, updated = process_eight_csv(csv_content, user.id)
+        success, updated = process_csv_import(csv_content, user.id)
         db.session.commit()
         
         assert success == 2
@@ -53,7 +53,7 @@ def test_process_eight_csv_update(app):
             "新,氏名,新 会社,update@example.com\n"
         ).encode("utf-8-sig")
         
-        success, updated = process_eight_csv(csv_content, user.id)
+        success, updated = process_csv_import(csv_content, user.id)
         db.session.commit()
         
         assert success == 0

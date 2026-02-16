@@ -40,7 +40,9 @@ def admin_add_user():
         username = request.form.get("username")
         password = request.form.get("password")
         company_name = request.form.get("company_name")
-        real_name = request.form.get("real_name")
+        # real_name = request.form.get("real_name") 
+        last_name = request.form.get("last_name")
+        first_name = request.form.get("first_name")
         
         if User.query.filter_by(username=username).first():
             return render_template("admin_form.html", error="このユーザー名は既に使用されています", user={})
@@ -50,7 +52,9 @@ def admin_add_user():
             username=username,
             password=hashed_pw,
             company_name=company_name,
-            real_name=real_name,
+            last_name=last_name,
+            first_name=first_name,
+            # real_name=real_name,
             monthly_limit=int(request.form.get("monthly_limit") or 100)
         )
         db.session.add(new_user)
@@ -66,7 +70,15 @@ def admin_edit_user(user_id):
     user = User.query.get_or_404(user_id)
     if request.method == "POST":
         user.company_name = request.form.get("company_name")
-        user.real_name = request.form.get("real_name")
+        
+        last_name = request.form.get("last_name")
+        first_name = request.form.get("first_name")
+        if last_name or first_name:
+            user.last_name = last_name
+            user.first_name = first_name
+        else:
+            user.real_name = request.form.get("real_name")
+            
         user.monthly_limit = int(request.form.get("monthly_limit") or 100)
         
         password = request.form.get("password")

@@ -53,7 +53,7 @@ def test_upload_card_mocked(mock_analyze, auth_client):
     assert res_data["message"] == "登録完了"
     
     # DBに登録されているか確認
-    card = Card.query.filter_by(person_name="テスト 太郎").first()
+    card = Card.query.filter_by(last_name="テスト", first_name="太郎").first()
     assert card is not None
     assert card.company_name == "モック株式会社"
 
@@ -61,10 +61,10 @@ def test_upload_card_mocked(mock_analyze, auth_client):
 @patch("routes.cards.get_ai_completion")
 def test_generate_email_mocked(mock_ai, mock_web, auth_client, app):
     """メール生成画面のモックテスト"""
-    mock_ai.return_value = json.dumps({
+    mock_ai.return_value = {
         "subject": "テスト件名",
         "body": "これはモックされたメール本文です。"
-    })
+    }
     mock_web.return_value = "モックされた企業情報"
     
     with app.app_context():
@@ -81,3 +81,18 @@ def test_generate_email_mocked(mock_ai, mock_web, auth_client, app):
     res_data = json.loads(response.data)
     assert "これはモックされたメール本文です。" in res_data["body"]
     assert res_data["subject"] == "テスト件名"
+
+def test_edit_card_page(auth_client, app):
+    """名刺編集画面が表示されるか"""
+    with app.app_context():
+        user = User.query.filter_by(username="testuser").first()
+        # テスト用名刺を作成
+        card = Card(user_id=user.id, company_name="編集テスト株式会社", person_name="編集対象者")
+        db.session.add(card)
+        db.session.commit()
+        card_id = card.id
+
+    response = auth_client.get(f"/cards/{card_id}/edit")
+    assert response.status_code == 200
+    assert "名刺編集".encode("utf-8") in response.data
+    assert "編集テスト株式会社".encode("utf-8") in response.data
